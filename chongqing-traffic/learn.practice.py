@@ -14,10 +14,10 @@ def fetch_traffic(key,rectangle):
         'extensions':'all'
     }
 
-    r = req.get(url, params=params)             # r 为response， req 见 import request as req
-    data_traffic = r.json()                      #将 r 中的json数据解码为 python字典
-    print(data_traffic)                          #看一眼数据长啥样。
-    roads = data_traffic['trafficinfo']['roads']      #列表 不能用['str']取出
+    r = req.get(url, params=params)             
+    data_traffic = r.json()                      
+    print(data_traffic)                          
+    roads = data_traffic['trafficinfo']['roads']      
     print(f"获取到了 {len(roads)} 条道路。")
 
     data_list = []
@@ -30,7 +30,7 @@ def fetch_traffic(key,rectangle):
         }
         )
 
-    df = pd.DataFrame(data_list)                            #做出所要数据的表格
+    df = pd.DataFrame(data_list)                         
     df = df[df['polyline'].notna() & (df['polyline'].str.strip() != '')].copy()
     print(f'过滤后剩余的道路数: {len(df)}。')
     if len(df) == 0:
