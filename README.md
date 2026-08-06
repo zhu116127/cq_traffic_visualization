@@ -1,12 +1,14 @@
-# git
+# zhu111
 
-My first GitHub repository! 🚀
+我的 GitHub 代码仓库 🚀
 
-## About
+## 项目列表
 
-This is a project managed with Git and hosted on GitHub.
+| 项目 | 说明 |
+|------|------|
+| [`chongqing-traffic/`](./chongqing-traffic/) | 重庆交通态势可视化 - 高德API + Folium 交互地图 |
 
-## Getting Started
+## 克隆
 
 ```bash
 git clone https://github.com/zhu116127/zhu111.git

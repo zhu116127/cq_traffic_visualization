@@ -1,0 +1,14 @@
+# 生成的交通地图 HTML 文件
+traffic_maps/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 虚拟环境
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
