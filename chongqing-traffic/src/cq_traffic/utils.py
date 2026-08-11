@@ -1,0 +1,123 @@
+#工具函数：日志、常量、状态映射。
+
+
+
+from __future__ import annotations
+
+import logging
+import sys
+from pathlib import Path
+from typing import Optional
+
+# ---------------------------------------------------------------------------
+# 状态码 → 颜色 / 中文标签映射
+# ---------------------------------------------------------------------------
+# 高德地图交通态势 API 返回的道路状态码：
+#   0 — 未知
+#   1 — 畅通
+#   2 — 缓行
+#   3 — 拥堵
+#   4 — 严重拥堵
+
+STATUS_COLORS: dict[str, str] = {
+    "0": "gray",
+    "1": "green",
+    "2": "orange",
+    "3": "red",
+    "4": "darkred",
+}
+
+STATUS_LABELS: dict[str, str] = {
+    "0": "未知",
+    "1": "畅通",
+    "2": "缓行",
+    "3": "拥堵",
+    "4": "严重拥堵",
+}
+
+
+def get_color(status: str) -> str:
+    """根据高德道路状态码返回对应颜色。
+
+    Args:
+        status: 道路状态码字符串（"0"~"4"）
+
+    Returns:
+        HTML 颜色名（如 "green", "red"）
+    """
+    return STATUS_COLORS.get(status, "gray")
+
+
+def get_status_label(status: str) -> str:
+    """根据高德道路状态码返回中文标签。
+
+    Args:
+        status: 道路状态码字符串（"0"~"4"）
+
+    Returns:
+        中文状态描述（如 "畅通", "拥堵"）
+    """
+    return STATUS_LABELS.get(status, "未知")
+
+
+# ---------------------------------------------------------------------------
+# 日志配置
+# ---------------------------------------------------------------------------
+
+def setup_logging(
+    level: int = logging.INFO,
+    log_file: Optional[str | Path] = None,
+) -> None:
+    """配置根 Logger（仅在 CLI 入口调用一次）。
+
+    日志同时输出到终端（stderr）和可选的日志文件。该函数设计为幂等的——
+    重复调用时若根 Logger 已有 handler 则跳过，避免重复输出。
+
+    Args:
+        level:  日志级别，默认 INFO。调试时传 logging.DEBUG。
+        log_file: 可选的文件路径，日志将追加写入该文件。
+    """
+    root = logging.getLogger()
+
+    # 幂等保护：如果已经配置过 handler，不再重复添加
+    if root.handlers:
+        return
+
+    root.setLevel(level)
+
+    # 终端 handler（stderr，避免和正常的 stdout 输出混在一起）
+    console_handler = logging.StreamHandler(sys.stderr)
+    console_handler.setLevel(level)
+    console_fmt = logging.Formatter(
+        "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    console_handler.setFormatter(console_fmt)
+    root.addHandler(console_handler)
+
+    # 可选的文件 handler
+    if log_file is not None:
+        file_handler = logging.FileHandler(
+            str(log_file), mode="a", encoding="utf-8"
+        )
+        file_handler.setLevel(level)
+        file_fmt = logging.Formatter(
+            "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+        )
+        file_handler.setFormatter(file_fmt)
+        root.addHandler(file_handler)
+
+
+def get_logger(name: str) -> logging.Logger:
+    """获取指定名称的 Logger。
+
+    各模块在顶部调用：
+        logger = get_logger(__name__)
+
+    Args:
+        name: Logger 名称（通常传 __name__）
+
+    Returns:
+        配置好的 Logger 实例。
+    """
+    return logging.getLogger(name)
