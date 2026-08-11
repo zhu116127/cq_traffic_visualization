@@ -9,7 +9,7 @@ def fetch_traffic_api (key="你的key",rectangle="你要查询的矩形区域"):
         'extensions':'all'
     }
     r = req.get(url, params=params)
-    Data_traffic = r.json()
+    data_traffic = r.json()
     roads = Data_traffic['trafficinfo']['roads']
     print(f"获取到了 {len(roads)} 条道路。")
     return roads

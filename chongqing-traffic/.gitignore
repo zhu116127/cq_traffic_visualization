@@ -12,3 +12,10 @@ venv/
 # IDE
 .vscode/
 .idea/
+
+data/
+
+*.log
+
+
+congfig.local.yaml
