@@ -70,7 +70,7 @@ def get_status_label(status: str) -> str:
 def setup_logging(                              #basicConfig()函数用于配置日志系统的基本设置，包括日志级别、日志格式、输出位置等。它是logging模块中最常用的配置方法之一，适用于简单的日志记录需求。
     level: int = logging.INFO,                  #这里是basicConfig（）的进阶版
     log_file: Optional[str | Path] = None,      #可选的日志文件路径，选字符串（也就是文件）或选Path对象（pathlib.Path），默认值为None，表示不写入日志文件。
-) -> None:
+) -> None:                                      #pathlib库好像很高级，暂时还不懂。
     """配置根 Logger（仅在 CLI 入口调用一次）。
 
     日志可以输出到终端（stderr）或可选的日志文件。该函数设计幂等。
@@ -86,7 +86,7 @@ def setup_logging(                              #basicConfig()函数用于配置
     if root.handlers:                            #如果根 Logger 已经有 handler，则说明已经配置过日志，直接返回，避免重复输出。
         return
 
-    root.setLevel(level)                         #水闸
+    root.setLevel(level)                         #可类比为水闸
 
     # 终端 handler（stderr，避免和正常的 stdout 输出混在一起）
     console_handler = logging.StreamHandler(sys.stderr)
@@ -110,7 +110,7 @@ def setup_logging(                              #basicConfig()函数用于配置
         file_handler.setFormatter(file_fmt)
         root.addHandler(file_handler)
                                                 ##似乎有一个什么Propagate的东西，暂时不管它，先用这个吧。
-
+                                                ##这份日志是似乎是模版，可以直接拿来用的，其他项目也可以用这个日志配置函数。
 def get_logger(name: str) -> logging.Logger:
     """获取指定名称的 Logger。
 
@@ -142,7 +142,7 @@ for road in roads:
     )
 
 df = pd.DataFrame(data_list)                            #做出所要数据的表格
-df = df[df['polyline'].notna() & (df['polyline'].str.strip() != '')].copy()
+df = df[df['polyline'].notna() & (df['polyline'].str.strip() != '')].copy()      #数据清洗的标准格式，可以记下来
 print(f'过滤后剩余的道路数: {len(df)}。')
 if len(df) == 0:
     print("数据异常，请重新获取。")

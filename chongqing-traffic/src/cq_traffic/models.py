@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Optional         #用来表示一个类型可以是某个类型或者是 None 的类型提示
 
 from .utils import STATUS_COLORS, STATUS_LABELS      #   .xxx 是同级文件夹里找 xxx.py ,  ..yyy 是从上一级（父级）里找 yyy.py
-
+                                                     #一、三两个库不太懂，以后可了解，似乎是规范性的东西，可记住。
 
 @dataclass        #放在类的定义之前，作用于整个类，自动生成 __init__（初始化）、__repr__（字符串表示）、__eq__（相等性比较）等方法，简化类的定义。适用于主要用于存储数据的类。
 class RoadData:
