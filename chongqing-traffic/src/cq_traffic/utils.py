@@ -8,7 +8,8 @@ from __future__ import annotations    #让python支持在类型注解中使用�
 import logging                        #日志记录器
 import sys                            #与python解释器及其环境进行交互的模块
 from pathlib import Path              #面向对象的文件系统路径操作模块，好用多用。
-from typing import Optional           #用来表示一个类型可以是某个类型或者是 None 的类型提示S
+from typing import Optional           #用来表示一个类型可以是某个类型或者是 None 的类型提示
+import pandas as pd                      #数据分析库
 
 # ---------------------------------------------------------------------------
 # 状态码 → 颜色 / 中文标签映射
@@ -74,7 +75,7 @@ def setup_logging(                              #basicConfig()函数用于配置
 
     日志可以输出到终端（stderr）或可选的日志文件。该函数设计幂等。
     重复调用时若根 Logger 已有 handler 则跳过，避免重复输出。
-m
+
     Args:
         level:  日志级别，默认 INFO。调试时传 logging.DEBUG。
         log_file: 可选的文件路径，日志将追加写入该文件。
@@ -123,3 +124,30 @@ def get_logger(name: str) -> logging.Logger:
         配置好的 Logger 实例。
     """
     return logging.getLogger(name)
+
+
+
+#======================================================
+#数据清洗
+#======================================================
+
+data_list = []
+for road in roads:
+    data_list.append({
+    'name':road['name'],
+    'status': road['status'],
+    'speed': road.get('speed'),
+    'polyline':road['polyline']
+    }
+    )
+
+df = pd.DataFrame(data_list)                            #做出所要数据的表格
+df = df[df['polyline'].notna() & (df['polyline'].str.strip() != '')].copy()
+print(f'过滤后剩余的道路数: {len(df)}。')
+if len(df) == 0:
+    print("数据异常，请重新获取。")
+else:
+    df['first_point'] = df['polyline'].str.split(';').str[0]
+    df['lng'] = df['first_point'].str.split(',').str[0].astype(float)
+    df['lat'] = df['first_point'].str.split(',').str[1].astype(float)
+print(df[['name','lng','lat','status','speed']].head())

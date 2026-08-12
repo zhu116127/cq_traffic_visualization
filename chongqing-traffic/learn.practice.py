@@ -27,7 +27,7 @@ else:
     df['first_point'] = df['polyline'].str.split(';').str[0]
     df['lng'] = df['first_point'].str.split(',').str[0].astype(float)
     df['lat'] = df['first_point'].str.split(',').str[1].astype(float)
-print(df[['name','lng','lat','status']].head())
+print(df[['name','lng','lat','status','speed']].head())
 
 m = folium.Map(location=[29.56, 106.55], zoom_start=13)
 
