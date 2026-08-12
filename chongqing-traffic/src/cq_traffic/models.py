@@ -1,4 +1,5 @@
 #数据模型：使用dataclasses定义高德返回的交通数据
+#右侧注释为个人学习理解，可能不太准确，仅供参考。
 
 from __future__ import annotations    #让python支持在类型注解中使用前向引用（forward references），即在类型注解中引用尚未定义的类或类型。这在定义递归数据结构或相互引用的类时非常有用。
 from dataclasses import dataclass
