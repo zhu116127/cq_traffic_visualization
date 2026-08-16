@@ -13,8 +13,8 @@ class RoadData:
     '''道路数据的纯数据结构'''
     name: str
     status: str
-    speed: Optional[float] = None     #可以是 None，表示没有速度数据，也可以是 float，表示有速度数据，当没有速度数据时，speed 字段的值默认为 None
     polyline: str
+    speed: Optional[float] = None     #可以是 None，表示没有速度数据，也可以是 float，表示有速度数据，当没有速度数据时，speed 字段的值默认为 None
     direction: str = ''   #可选字段，默认为空字符串，表示没有方向信息。可以根据需要在实例化对象时传入具体的方向信息。
                     #属于面对对象编程的概念，类的属性和方法可以被实例化对象访问和使用。实例化对象是类的具体表现形式，通过类创建的对象可以拥有类定义的属性和方法，从而实现对数据的封装和操作。
                     #有点绕，好难啊[哭唧唧]

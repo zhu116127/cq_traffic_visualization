@@ -84,7 +84,7 @@ chongqing-traffic/
   - `query_rectangle(rectangle, level)` — 矩形查询
   - `query_circle(location, radius, level)` — 圆形查询（新增）
   - `query_road(name, city)` — 道路名查询（新增）
-- 错误处理增强：`raise_for_status()`、API 业务错误检查、超时设置
+- 错误处理增强：`raise_for_status()`、API 业务错误检查、超时设置 
 - `_parse_roads()` 统一解析道路数据，过滤空 polyline
 
 ### 1d. `mapgen.py` — 地图生成

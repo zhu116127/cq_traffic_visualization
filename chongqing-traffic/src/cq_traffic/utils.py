@@ -48,7 +48,7 @@ def get_color(status: str) -> str:           #括号里是参数和类型注解�
     Returns:
         HTML 颜色名（如 "green", "red"）
     """
-    return STATUS_COLORS.get(status, "gray")     #.get() 方法用于从字典中获取指定键的值，如果键不存在，则返回默认值 "gray"。
+    return STATUS_COLORS.get(status, "gray")     #.get() 方法用于从字典中获取指定键的值，如果键不存在，则返回默认值 "gray"。另外，request.get()是网站访问。
                                                  #[]取值，若没有则报错，get()取值，若没有则返回None或指定的默认值
 
 def get_status_label(status: str) -> str:
@@ -126,28 +126,11 @@ def get_logger(name: str) -> logging.Logger:
     return logging.getLogger(name)
 
 
-
-#======================================================
-#数据清洗
-#======================================================
-
-data_list = []
-for road in roads:
-    data_list.append({
-    'name':road['name'],
-    'status': road['status'],
-    'speed': road.get('speed'),
-    'polyline':road['polyline']
-    }
-    )
-
-df = pd.DataFrame(data_list)                            #做出所要数据的表格
-df = df[df['polyline'].notna() & (df['polyline'].str.strip() != '')].copy()      #数据清洗的标准格式，可以记下来
-print(f'过滤后剩余的道路数: {len(df)}。')
-if len(df) == 0:
-    print("数据异常，请重新获取。")
-else:
-    df['first_point'] = df['polyline'].str.split(';').str[0]
-    df['lng'] = df['first_point'].str.split(',').str[0].astype(float)
-    df['lat'] = df['first_point'].str.split(',').str[1].astype(float)
-print(df[['name','lng','lat','status','speed']].head())
+#————————————工具函数——————————————————
+def to_float(value):
+    if value is None or value == "":
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
