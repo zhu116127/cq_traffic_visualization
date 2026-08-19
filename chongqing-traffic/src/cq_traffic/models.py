@@ -27,13 +27,16 @@ class RoadData:
         return STATUS_LABELS.get(self.status, '未知')
 
     @property
-    def first_point(self) -> tuple[float, float] | None:      # | 或的意思
-        """解析 polyline 第一个坐标点，返回 (lng, lat)"""
-        if not self.polyline or not self.polyline.strip():       #防御性编程，判断 polyline 是否为空或仅包含空白字符，如果是，则返回 None，表示没有有效的坐标点。
-            return None                                            #.strip()可去除空白字符（tab、空格），将"     "转换为""，再判断是否为空字符串。它的两个兄弟是 lstrip() 和 rstrip()，分别用于去除字符串左侧和右侧的空白字符。
-        first = self.polyline.split(";")[0]         #分割提取，可print一下传回来的数据，自行理解
-        lng, lat = first.split(",")                  #注意区分 .strip() 和 .split() 的区别，前者是去除空白字符，后者是分割字符串
-        return (float(lng), float(lat))
+    def all_points(self) -> list[tuple[float, float]]:
+        """解析整条路的全部坐标点，返回 [(lng, lat), ...]（保持高德原始顺序）"""
+        points = []
+        for pair in self.polyline.split(";"):
+            if not pair.strip():
+                continue
+            lng, lat = pair.split(",")
+            points.append((float(lng), float(lat)))
+        return points
+
 
     
 
