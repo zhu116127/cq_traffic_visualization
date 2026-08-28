@@ -46,9 +46,9 @@ class AmapTrafficClient:
             r = req.get(url, params=params, timeout=self.timeout)
             r.raise_for_status()                             # request库里的异常处理，如果 HTTP 请求返回了不成功的状态码， Response.raise_for_status() 会抛出一个 HTTPError 异常
         except req.exceptions.Timeout:                       #若请求超时，则抛出一个 Timeout 异常，总感觉和上面的功能重了。
-            raise req.exceptions.Timeout("请求超时,请重试。")
+            raise req.exceptions.Timeout("请求超时,请重试。") from e
         except req.exceptions.HTTPError as e:
-            raise req.exceptions.HTTPError(f"网络请求失败：状态码 {e.response.status_code}")
+            raise req.exceptions.HTTPError(f"网络请求失败：状态码 {e.response.status_code}") from e
         except Exception as e:                               #Exception是绝大部分异常的的祖宗，放最后垫底，万能兜底。
             logger.error(f"发现未知错误：{e} ")               #logger 日志相关utils里有介绍，另外，上面教程链接里也都有，略过了。
             raise

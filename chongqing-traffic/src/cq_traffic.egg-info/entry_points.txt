@@ -1,0 +1,2 @@
+[console_scripts]
+cq-traffic = cq_traffic.cli:main
