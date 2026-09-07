@@ -10,7 +10,8 @@ logger = get_logger(__name__)
 def generate_traffic_map(road_data, center, zoom, out_dir, show_legend=True, show_stats=True):            #show_legend和show_stats ，默认传True ，不想用就传 False
     '''绘制可视化交互地图'''
     lat, lng = (float(x) for x in center.split(","))
-    m = folium.Map(location=[lat, lng], zoom_start=zoom)
+    amap_tiles = "https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}"
+    m = folium.Map(location=[lat, lng], zoom_start=zoom, tiles=amap_tiles, attr='高德地图')  #folium.Map() 是 folium 的一个函数， 用来创建地图对象； location 是地图中心点坐标， zoom_start 是缩放级别， tiles 是地图的样式， attr 是版权信息。
     for road in road_data:                               #road_data 是list[RoadData]，road 是 RoadData 实例 → 用 road.xxx（属性）；而 api.py 里 road 是高德返回的 dict → 用 road.get('xxx')。
         points = [(a_lat, a_lng) for a_lng, a_lat in road.all_points]                 #这里有两个不同的变量  lat 和 lng
         # a + _ 用以区分中心坐标，和划线坐标

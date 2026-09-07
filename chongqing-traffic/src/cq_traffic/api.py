@@ -3,6 +3,9 @@ from .utils import get_logger
 import requests as req
 from .models import RoadData
 from .utils import to_float
+import os
+import json
+from datetime import datetime
 
 
 
@@ -55,7 +58,31 @@ class AmapTrafficClient:
         else:
             logger.info('成功获取！')
 
-        return self._parse_roads(r.json())                 # ٩(๑´0`๑)۶ 神之一手，把_parse_roads()和_get()联系起来，再一起交给query_xxx(), 彻底打通整个链路。
+        data = r.json()
+        self._save_to_json(data, path)                          #将原始数据保存为json文件
+        return self._parse_roads(data)                           #将原始数据解析为RoadData对象列表
+
+
+    def _save_to_json(self, data: dict, path: str):
+        '''将原始数据保存为json文件'''
+        query_type = path.lstrip("/")                       #去掉路径中的斜杠
+        folder = os.path.join("data", "raw")                #拼接路径
+        os.makedirs(folder, exist_ok=True)                #创建多级文件夹，exist_ok=True表示如果文件夹已存在，则不会抛出异常。
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = os.path.join(folder, f"{query_type}_{ts}.json")
+        try:
+            with open(filename, "w" ,encoding="utf-8", ) as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)  #json.dump()是将Python对象编码成JSON字符串并写入文件，ensure_ascii=False表示不转义非ASCII字符，indent=2表示缩进2个空格。
+            logger.info(f"原始数据已保存在 {filename}。")
+        except FileNotFoundError:
+            logger.error(f"文件没找到！")
+        except Exception as e:
+            logger.error(f"保存原始数据时发生错误：{e}")
+            raise
+
+
+
+
 
 #——————————————————————数据清洗过滤 并 创建ClassData对象——————————————————
     def _parse_roads(self, data: dict):
